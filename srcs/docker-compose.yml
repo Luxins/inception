@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3'
 
 services:
   nginx:
@@ -45,16 +45,6 @@ services:
     volumes:
       - wordpress_volume:/var/www/wordpress
 
-  static_website:
-    image:    static_website
-    build:    ./requirements/bonus/static_website
-    container_name: static_website
-    restart: on-failure
-    networks:
-      - inception
-    ports:
-      - 3000:3000
-
 volumes:
   db_volume:
     name: "db_volume"
@@ -73,9 +63,3 @@ networks:
   inception:
     name: inception
     driver: bridge
-
-
-# for eval:
-# docker stop $(docker ps -qa); docker rm $(docker ps -qa);
-# docker rmi -f $(docker images -qa); docker volume rm $(docker volume ls -q);
-# docker network rm $(docker network ls -q) 2>/dev/null
