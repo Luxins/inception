@@ -1,6 +1,7 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get install -y php-mysql php-fpm mariadb-client wget unzip curl sendmail
+RUN apt-get update && apt-get install -y php-mysql php-fpm mariadb-client wget unzip curl
+# You can probably take out sendmail
 
 # <the fpm process has www-data user>
 RUN mkdir -p /var/www/html

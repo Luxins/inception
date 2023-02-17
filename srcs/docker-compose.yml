@@ -22,10 +22,6 @@ services:
     restart: on-failure
     networks:
       - inception
-    ports:
-      - 3306:3306
-    env_file:
-      - ./.env
     volumes:
       - db_volume:/var/lib/mysql
 
@@ -38,8 +34,6 @@ services:
     restart: on-failure
     networks:
       - inception
-    ports:
-      - 9000:9000
     env_file:
       - ./.env
     volumes:

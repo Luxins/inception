@@ -1,26 +1,22 @@
 #!/bin/bash
 
-cd /var/www/wordpress
-# wp-cli --allow-root core download
 wp-cli --allow-root core config \
-		--dbhost=mariadb \
-		--dbname=wordpress \
-		--dbuser=wordpress \
-		--dbpass=secret \
+		--dbhost=${DB_HOST} \
+		--dbname=${DB_NAME} \
+		--dbuser=${DB_USER} \
+		--dbpass=${DB_PASS} \
 		--locale=en_US \
 		--skip-check
 
-# chown www-data:www-data wp-config.php
-
 wp-cli --allow-root core install \
-		--url="ljahn.42.fr" \
-		--title="Inception Demo Page" \
-		--admin_user=ljahn \
-		--admin_password=ljahn \
-		--admin_email="ljahn@student.42wolfsburg.de"
+		--url=${WEBSITE_URL_WITHOUT_HTTP} \
+		--title=${WEBSITE_TITLE} \
+		--admin_user=${ADMIN_USER} \
+		--admin_password=${ADMIN_PASS} \
+		--admin_email=${ADMIN_EMAIL}
 
-wp-cli --allow-root option update siteurl "https://ljahn.42.fr"
+wp-cli --allow-root option update siteurl ${WEBSITE_URL}
 wp-cli --allow-root rewrite structure '/%year%/%monthnum%/%day%/%postname%/'
-wp-cli --allow-root user create student student@example.com --role=contributor --user_pass=student
+wp-cli --allow-root user create ${OTHER_USER} ${OTHER_USER_EMAIL} --role=contributor --user_pass=${OTHER_USER_PASS}
 
-exec "$@"
+exec "$@" # Execute next command given as argument to the script
