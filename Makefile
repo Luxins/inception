@@ -12,6 +12,8 @@ subject:
 	docker volume rm $$(docker volume ls -q) || true;
 	docker network rm $$(docker network ls -q) 2>/dev/null || true
 
+subject_reboot: down
+	docker rmi -f $$(docker images -qa) || true;
 
 up:
 	./updates_images.sh

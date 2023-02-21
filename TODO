@@ -1,0 +1,2 @@
+Look that you can not log in as root anymore to the database.
+Make the password in the env variable an environment variable.

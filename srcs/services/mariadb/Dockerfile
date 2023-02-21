@@ -22,5 +22,5 @@ EXPOSE 3306
 # RUN chmod +x ./put_state_and_launch.sh
 # ENTRYPOINT ["./put_state_and_launch.sh"]
 
-CMD ["/usr/sbin/mysqld", "--user=root", "--init-file=/etc/mysql/database.sql"]
+CMD ["/usr/sbin/mysqld", "--user=mysql", "--init-file=/etc/mysql/database.sql"]
 # CMD ["bash", "-c", "while true; do sleep 1; done"]
