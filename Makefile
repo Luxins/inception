@@ -1,27 +1,31 @@
-NAME = inception
-SRC =	srcs/docker-compose.yml
+NAME = Inception
+SRCS = srcs/docker-compose.yml
 
 $(NAME): all
 
-all: clean up
+all: up
+
+subject:
+	docker stop $$(docker ps -qa) || true;
+	docker rm $$(docker ps -qa) || true;
+	docker rmi -f $$(docker images -qa) || true;
+	docker volume rm $$(docker volume ls -q) || true;
+	docker network rm $$(docker network ls -q) 2>/dev/null || true
+
 
 up:
-	mkdir -p /home/ljahn/data/wordpress_volume
-	mkdir -p /home/ljahn/data/db_volume
-	docker-compose -f $(SRC) up -d --build
+	./updates_images.sh
+	docker-compose -f $(SRCS) up --build -d
 
 down:
-	docker-compose -f $(SRC) down
+	docker-compose -f $(SRCS) down
 
 clean: down
 	docker system prune -af
 
 fclean: clean
-	docker volume rm -f db_volume
-	docker volume rm -f wordpress_volume
-	sudo rm -rf /home/ljahn/data/wordpress_volume
-	sudo rm -rf /home/ljahn/data/db_volume
+	docker volume rm -f $(docker volume ls -q) || true
+	rm -rf /home/ljahn/data/db_volume/*;
+	rm -rf /home/ljahn/data/wp_volume/*;
 
-re: clean up
-
-.PHONY: all up down clean  fclean re
+.PHONY: all down clean fclean subject

@@ -1,59 +1,58 @@
 version: '3'
 
 services:
-  nginx:
-    image: nginx
-    build: ./requirements/nginx
-    container_name: nginx
-    depends_on:
-      - wordpress
-    restart: on-failure
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    build: /home/inception/srcs/services/mariadb
+    volumes:
+      - db_volume:/var/lib/mysql
     networks:
       - inception
+    restart: on-failure
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    build: /home/inception/srcs/services/nginx
     ports:
       - 443:443
     volumes:
-      - wordpress_volume:/var/www/wordpress
-
-  mariadb:
-    image:  mariadb
-    build:  ./requirements/mariadb
-    container_name: mariadb
-    restart: on-failure
+      - wp_volume:/var/www/wordpress
+    depends_on:
+      - wordpress
     networks:
       - inception
-    volumes:
-      - db_volume:/var/lib/mysql
+    restart: on-failure
 
   wordpress:
-    image:      wordpress
-    build:      ./requirements/wordpress
     container_name: wordpress
+    image: wordpress
+    build: /home/inception/srcs/services/wordpress
+    volumes:
+      - wp_volume:/var/www/wordpress
     depends_on:
       - mariadb
-    restart: on-failure
     networks:
       - inception
+    restart: on-failure
     env_file:
-      - ./.env
-    volumes:
-      - wordpress_volume:/var/www/wordpress
+      - .env
 
 volumes:
+  wp_volume:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ljahn/data/wp_volume
   db_volume:
-    name: "db_volume"
     driver_opts:
       type: none
       o: bind
       device: /home/ljahn/data/db_volume
-  wordpress_volume:
-    name: "wordpress_volume"
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/ljahn/data/wordpress_volume
 
 networks:
   inception:
     name: inception
     driver: bridge
+        
